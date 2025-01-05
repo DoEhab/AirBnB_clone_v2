@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+""" unit test for base model class """
 from models.base_model import BaseModel
 import unittest
 import datetime
@@ -9,38 +9,39 @@ import os
 
 
 class test_basemodel(unittest.TestCase):
-    """ """
+    """ base model class testing"""
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """ class initialization"""
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
 
     def setUp(self):
-        """ """
+        """set up test resources """
         pass
 
     def tearDown(self):
+        """ Remove test resources"""
         try:
             os.remove('file.json')
         except:
             pass
 
     def test_default(self):
-        """ """
+        """ default instance"""
         i = self.value()
         self.assertEqual(type(i), self.value)
 
     def test_kwargs(self):
-        """ """
+        """ test using keyword args """
         i = self.value()
         copy = i.to_dict()
         new = BaseModel(**copy)
         self.assertFalse(new is i)
 
     def test_kwargs_int(self):
-        """ """
+        """ test non string keys"""
         i = self.value()
         copy = i.to_dict()
         copy.update({1: 2})
@@ -57,41 +58,41 @@ class test_basemodel(unittest.TestCase):
             self.assertEqual(j[key], i.to_dict())
 
     def test_str(self):
-        """ """
+        """  test string representation """
         i = self.value()
         self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
                          i.__dict__))
 
     def test_todict(self):
-        """ """
+        """ test to dict method"""
         i = self.value()
         n = i.to_dict()
         self.assertEqual(i.to_dict(), n)
 
     def test_kwargs_none(self):
-        """ """
+        """  test None kwargs to raise error"""
         n = {None: None}
         with self.assertRaises(TypeError):
             new = self.value(**n)
 
     def test_kwargs_one(self):
-        """ """
+        """ raises error for incomplete args"""
         n = {'Name': 'test'}
         with self.assertRaises(KeyError):
             new = self.value(**n)
 
     def test_id(self):
-        """ """
+        """ test it is a valid string id"""
         new = self.value()
         self.assertEqual(type(new.id), str)
 
     def test_created_at(self):
-        """ """
+        """ test created at value is date time"""
         new = self.value()
         self.assertEqual(type(new.created_at), datetime.datetime)
 
     def test_updated_at(self):
-        """ """
+        """ test updated at is date time"""
         new = self.value()
         self.assertEqual(type(new.updated_at), datetime.datetime)
         n = new.to_dict()
