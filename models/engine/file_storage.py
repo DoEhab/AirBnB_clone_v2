@@ -16,6 +16,7 @@ class FileStorage:
             for key, val in FileStorage.__objects.items():
                 if val.__class__ == cls:
                     result[key] = val
+                    self.save()
             return result
         return FileStorage.__objects
 
@@ -65,3 +66,4 @@ class FileStorage:
             key = obj.to_dict()["__class__"] + "." + obj.id
             if key in FileStorage.__objects:
                 del FileStorage.__objects[key]
+                self.save()
