@@ -2,20 +2,18 @@
 """ Console Module """
 import cmd
 import sys
-from models.base_model import BaseModel
-from models.__init__ import storage
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
-
 
 class HBNBCommand(cmd.Cmd):
     """Contains the functionality for the HBNB console"""
 
     # determines prompt for interactive/non-interactive modes
+    from models.base_model import BaseModel
+    from models.user import User
+    from models.state import State
+    from models.city import City
+    from models.amenity import Amenity
+    from models.place import Place
+    from models.review import Review
     prompt = "(hbnb) " if sys.__stdin__.isatty() else ""
 
     classes = {
@@ -81,8 +79,8 @@ class HBNBCommand(cmd.Cmd):
                 if pline:
                     # check for *args or **kwargs
                     if (
-                        pline[0] is "{"
-                        and pline[-1] is "}"
+                        pline[0] == "{"
+                        and pline[-1] == "}"
                         and type(eval(pline)) is dict
                     ):
                         _args = pline
@@ -137,9 +135,15 @@ class HBNBCommand(cmd.Cmd):
             return
         new_instance = HBNBCommand.classes[class_name]()
         for data in params[1:]:
-            key, val = data.split("=")
+            key, val = data.split("=", 1)
+
+            if val.startswith('"') and val.endswith('"'):
+                val = val[1:-1].replace('_', ' ').replace('\\"', '"')
+
             setattr(new_instance, key, val)
-        storage.save()
+
+        from models import storage
+        storage.new(new_instance)
         print(new_instance.id)
         storage.save()
 
@@ -171,8 +175,9 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = c_name + "." + c_id
+        from models import storage
         try:
-            print(storage._FileStorage__objects[key])
+            print(storage.all(c_name))
         except KeyError:
             print("** no instance found **")
 
@@ -203,6 +208,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
 
+        from models import storage
         try:
             del storage.all()[key]
             storage.save()
@@ -218,16 +224,17 @@ class HBNBCommand(cmd.Cmd):
         """Shows all objects, or all objects of a class"""
         print_list = []
 
+        from models import storage
         if args:
             args = args.split(" ")[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 if k.split(".")[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all():
                 print_list.append(str(v))
 
         print(print_list)
@@ -240,7 +247,8 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        from models import storage
+        for k, v in storage.all():
             if args == k.split(".")[0]:
                 count += 1
         print(count)
@@ -276,6 +284,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         # determine if key is present
+        from models import storage
         if key not in storage.all():
             print("** no instance found **")
             return
@@ -289,7 +298,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '"':  # check for quoted arg
+            if args and args[0] == '"':  # check for quoted arg
                 second_quote = args.find('"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1 :]
@@ -297,10 +306,10 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(" ")
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not " ":
+            if not att_name and args[0] != " ":
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] is '"':
+            if args[2] and args[2][0] == '"':
                 att_val = args[2][1 : args[2].find('"', 1)]
 
             # if att_val was not quoted arg

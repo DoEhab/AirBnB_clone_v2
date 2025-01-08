@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
 from sqlalchemy import Column, String, ForeignKey, Integer, Float, FLOAT
-
+from models.base_model import Base
 from models.base_model import BaseModel
 
 
-class Place(BaseModel):
+class Place(BaseModel, Base):
     """A place to stay"""
 
     __tablename__ = "places"

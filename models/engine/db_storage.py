@@ -43,7 +43,7 @@ class DBStorage:
                 queried_objs.extend(self.__session.query(model_cls).all())
 
         for obj in queried_objs:
-            key = f"{type(obj).name}.{obj.id}"
+            key = f"{type(obj).__name__}.{obj.id}"
             result[key] = obj
 
         return result

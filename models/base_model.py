@@ -5,7 +5,6 @@ from datetime import datetime
 
 from sqlalchemy import Integer, String, Column, DateTime
 from sqlalchemy.orm import declarative_base
-from models import storage
 
 Base = declarative_base()
 
@@ -61,4 +60,5 @@ class BaseModel:
 
     def delete(self):
         """deletes an instance"""
+        from models import storage
         storage.delete(self)
