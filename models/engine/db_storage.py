@@ -1,7 +1,7 @@
 #!/usr/bin/python3
+"""DBstorage class to handle DB functionalities"""
 from os import getenv
 
-from jaraco.classes.ancestry import all_classes
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
@@ -15,6 +15,8 @@ from models.user import User
 
 
 class DBStorage:
+    """DB initialization"""
+
     __engine = None
     __session = None
 
@@ -32,6 +34,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """return all items in the DB"""
         result = {}
         if cls:
             queried_objs = self.__session.query(cls).all()
@@ -49,18 +52,21 @@ class DBStorage:
         return result
 
     def new(self, obj):
+        """create new record in DB"""
         self.__session.add(obj)
 
     def save(self):
+        """Saves data to DB"""
         self.__session.commit()
 
     def delete(self, obj=None):
+        """delete item from the DB"""
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
+        """reload the DB session"""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
