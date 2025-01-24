@@ -27,9 +27,11 @@ fi
 
 echo "<!DOCTYPE html>
 <html>
-<body>
+  <head>
+  </head>
+  <body>
     <h1>ALX</h1>
-</body>
+  </body>
 </html>
 " > /data/web_static/releases/test/index.html
 
