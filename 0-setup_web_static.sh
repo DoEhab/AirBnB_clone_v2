@@ -40,14 +40,16 @@ ln -s "/data/web_static/releases/test/" "/data/web_static/current"
 
 chown -R ubuntu:ubuntu "/data"
 
-printf "%s\n" "server {
+sudo tee /etc/nginx/sites-available/default >/dev/null <<EOF
+server {
     listen 80;
     server_name _;
-    
+
     location /hbnb_static/ {
         alias /data/web_static/current/;
         index index.html;
     }
-}" > /etc/nginx/sites-available/default
+}
+EOF
 systemctl restart nginx
 
