@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" This script generates tgz archive """
+"""
+This Fabric script distributes an archive to web servers
+and sets it up for deployment.
+"""
 from fabric.api import local, put, run, env
 import os
 
@@ -8,7 +11,16 @@ env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
-    """This function to generate tgz archive"""
+    """
+    Deploys the archive to web servers.
+    
+    Args:
+        archive_path (str): The path to the archive file to deploy.
+    
+    Returns:
+        bool: True if deployment is successful, False otherwise.
+    """
+
     if not os.path.exists(archive_path):
         return False
 
