@@ -6,6 +6,7 @@ and sets it up for deployment.
 from fabric.api import local, put, run, env
 import os
 
+#environment vars
 env.hosts = ['54.160.81.72', '54.84.79.240']
 env.user = 'ubuntu'
 
