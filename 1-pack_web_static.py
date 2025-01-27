@@ -2,6 +2,7 @@
 """ This script generates tgz archive """
 
 def do_pack():
+    """This function to generate tgz archive"""
     try:
         if not os.path.exists("versions"):
             os.mkdir("versions")
