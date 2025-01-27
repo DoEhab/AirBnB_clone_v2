@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" This script generates tgz archive """
+""" This script uploads tgz archive to remote server """
 from fabric.api import local, put, run, env
 import os
 
@@ -8,7 +8,7 @@ env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
-    """This function to generate tgz archive"""
+    """This function uploads archived file """
     if not os.path.exists(archive_path):
         return False
 
