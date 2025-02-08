@@ -25,7 +25,7 @@ def print_text(text):
 
 
 @app.route('/python/<text>', strict_slashes=False)
-def print_python_text(text):
+def print_python_text(text="is cool"):
     """ Return input text"""
     return f'Python {escape(text)}'.replace("_", " ")
 
