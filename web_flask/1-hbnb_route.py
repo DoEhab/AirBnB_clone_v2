@@ -12,7 +12,7 @@ def display_text():
 
 
 @app.route('/hbnb', strict_slashes=False)
-def display_text():
+def hbnb():
     """ Return HBNB"""
     return "HBNB"
 
