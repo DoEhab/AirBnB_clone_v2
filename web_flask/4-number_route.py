@@ -34,7 +34,7 @@ def print_python_text(text="is cool"):
 @app.route('/number/<n>', strict_slashes=False)
 def print_number(n):
     """ Return number """
-    if n.isdigit():
+    if n.lstrip('-').isdigit():
         return f'{escape(n)} is a number'
 
 
